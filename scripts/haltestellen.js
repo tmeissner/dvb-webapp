@@ -61,6 +61,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
     // haltestelle object
     var haltestelle = {
 
+
         getInfo : function(event) {
 
             console.log("getInfo function");
@@ -79,6 +80,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
                 data = data.replace(/\],\[/gi, '#');
                 data = data.replace(/\(.+?\)/gi, '');
+                data = data.replace('ß', 'ss');
                 data = data.slice(2,-2).split("#");
 
                 console.log("parsed data: " + data);
@@ -99,11 +101,11 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 // generate table entries
                 for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
-                    data = data[i].split(",");
-                    console.log("part " + i + " of parsed data: " + data);
+                    var entry = data[i].split(",");
+                    console.log("part " + i + " of parsed data: " + entry);
                     for (y = 0; y < 3; y++) {
-                        console.log("part " + y + ": " + data[y]);
-                        htmlOutput += "<td>" + data[y].slice(1,-1) + "</td>";
+                        console.log("part " + y + ": " + entry[y]);
+                        htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
                 }
