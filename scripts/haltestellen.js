@@ -35,7 +35,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
         if(request.readyState === 4 && request.status === 200) {
 
             //save ajax response
-            var response = request.responseText;
+            var response = eval(request.responseText);
 
             // check if callback is a function
             if(typeof callback === "function") {
@@ -56,7 +56,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
     console.log("anonymous function");
 
     var wurst = [["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]];
-    console.log(wurst.length);
+    console.log(wurst[0][0]);
 
     // get the search form
     var searchForm = document.getElementById("search-form");
