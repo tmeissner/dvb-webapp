@@ -55,30 +55,6 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
     console.log("anonymous function");
 
-    var hupatz;
-    var blub  = document.getElementById("output");
-
-    var wurst = '[["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]]';
-    console.log(wurst);
-    wurst = wurst.replace(/\],\[/gi, '#');
-    wurst = wurst.slice(2,-2);
-    wurst = wurst.split("#");
-    console.log(wurst);
-    console.log(wurst.length);
-
-    hupatz =  "<table>";
-    for (var h = 0; h < wurst.length; h++) {
-        hupatz += "<tr>";
-        var hallo = wurst[h].split(",");
-        for (var x = 0; x < hallo.length; x++) {
-            hupatz += "<td>" + hallo[x].slice(1,-1) + "</td>";
-        }
-        hupatz += "</tr>";
-    }
-    hupatz += "</table>"
-
-    //blub.innerHTML = hupatz;
-
     // get the search form
     var searchForm = document.getElementById("search-form");
 
@@ -99,9 +75,13 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
             ajaxCall(hstUrl, target, function(data) {
 
+                console.log("received data: " + data);
+
                 data = data.replace(/\],\[/gi, '#');
                 data = data.slice(2,-2);
                 data = data.split("#");
+
+                console.log("parsed data: " + data);
 
                 var i;
                 var y;
@@ -118,7 +98,9 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
                     var trala = data[i].split(",");
+                    console.log("part " + i + " of parsed data: " + data)
                     for (y = 0; y < 3; y++) {
+                        console.log("part " + y + ": " + data[y])
                         htmlOutput += "<td>" + data[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
