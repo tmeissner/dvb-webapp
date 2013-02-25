@@ -98,9 +98,9 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
                     var trala = data[i].split(",");
-                    console.log("part " + i + " of parsed data: " + data)
+                    console.log("part " + i + " of parsed data: " + data);
                     for (y = 0; y < 3; y++) {
-                        console.log("part " + y + ": " + data[y])
+                        console.log("part " + y + ": " + data[y]);
                         htmlOutput += "<td>" + data[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
