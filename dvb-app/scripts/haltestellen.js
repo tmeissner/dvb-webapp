@@ -1,6 +1,7 @@
 // server url
 var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
 
+
 // xmlhttp object function
 function getHTTPObject() {
 
@@ -47,6 +48,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
     request.send(null);
 
 }
+
 
 // wrap all in anonymous function to get out of global scope
 (function() {
