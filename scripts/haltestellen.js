@@ -78,7 +78,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 console.log("received data: " + data);
 
                 data = data.replace(/\],\[/gi, '#');
-                data = data.replace(/\(.+\),\[/gi, '#');
+                data = data.replace(/\(.+\)/gi, '');
                 data = data.slice(2,-2).split("#");
 
                 console.log("parsed data: " + data);
