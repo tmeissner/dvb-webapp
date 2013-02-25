@@ -1,13 +1,3 @@
-/**
- * Created with JetBrains WebStorm.
- * User: torstenmeissner
- * Date: 24.02.13
- * Time: 22:38
- * To change this template use File | Settings | File Templates.
- */
-
-
-
 // server url
 var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
 
@@ -44,7 +34,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
         if(request.readyState === 4 && request.status === 200) {
 
             //save ajax response
-            var response = decodeHTML(request.responseText);
+            var response = request.responseText;
 
             // check if callback is a function
             if(typeof callback === "function") {
