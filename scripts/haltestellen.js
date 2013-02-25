@@ -78,8 +78,8 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 console.log("received data: " + data);
 
                 data = data.replace(/\],\[/gi, '#');
-                data = data.slice(2,-2);
-                data = data.split("#");
+                data = data.replace(/\(.+\),\[/gi, '#');
+                data = data.slice(2,-2).split("#");
 
                 console.log("parsed data: " + data);
 
@@ -88,6 +88,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 var htmlOutput;
                 var dataLength = data.length;
 
+                // generate table header
                 htmlOutput =  "<table>";
                 htmlOutput += "<tr>";
                 htmlOutput += "<th>Linie</th>";
@@ -95,17 +96,19 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 htmlOutput += "<th>Abfahrt</th>";
                 htmlOutput += "</tr>";
 
+                // generate table entries
                 for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
-                    var trala = data[i].split(",");
+                    data = data[i].split(",");
                     console.log("part " + i + " of parsed data: " + data);
                     for (y = 0; y < 3; y++) {
-                        console.log("part " + y + ": " + trala[y]);
-                        htmlOutput += "<td>" + trala[y].slice(1,-1) + "</td>";
+                        console.log("part " + y + ": " + data[y]);
+                        htmlOutput += "<td>" + data[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
                 }
 
+                // close table
                 htmlOutput += "</table>";
 
                 // print table into web page
