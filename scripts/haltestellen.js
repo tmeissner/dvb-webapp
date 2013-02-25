@@ -55,8 +55,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
     console.log("anonymous function");
 
-    var wurst = [["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]];
-    console.log(wurst[0][0]);
+    //var wurst = [["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]];
 
     // get the search form
     var searchForm = document.getElementById("search-form");
@@ -80,24 +79,28 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
                 var i;
                 var y;
+                var htmlOutput;
                 var dataLength = data.length;
 
-                target.innerHTML =  "<table>";
-                target.innerHTML += "<tr>";
-                target.innerHTML += "<th>Linie</th>";
-                target.innerHTML += "<th>Richtung</th>";
-                target.innerHTML += "<th>Abfahrt</th>";
-                target.innerHTML += "</tr>";
+                htmlOutput =  "<table>";
+                htmlOutput += "<tr>";
+                htmlOutput += "<th>Linie</th>";
+                htmlOutput += "<th>Richtung</th>";
+                htmlOutput += "<th>Abfahrt</th>";
+                htmlOutput += "</tr>";
 
                 for (i = 0; i < dataLength; i++) {
-                    target.innerHTML += "<tr>";
+                    htmlOutput += "<tr>";
                     for (y = 0; y < 3; y++) {
-                        target.innerHTML += "<td>" + data[i][y] + "</td>";
+                        htmlOutput += "<td>" + data[i][y] + "</td>";
                     }
-                    target.innerHTML += "</tr>";
+                    htmlOutput += "</tr>";
                 }
 
-                target.innerHTML += "</table>";
+                htmlOutput += "</table>";
+
+                // print table into web page
+                target.innerHTML = htmlOutput;
             });
         }
     };
