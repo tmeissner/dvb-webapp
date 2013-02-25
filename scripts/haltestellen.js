@@ -100,8 +100,8 @@ function ajaxCall(dataUrl, outputElement, callback) {
                     var trala = data[i].split(",");
                     console.log("part " + i + " of parsed data: " + data);
                     for (y = 0; y < 3; y++) {
-                        console.log("part " + y + ": " + data[y]);
-                        htmlOutput += "<td>" + data[y].slice(1,-1) + "</td>";
+                        console.log("part " + y + ": " + trala[y]);
+                        htmlOutput += "<td>" + trala[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
                 }
