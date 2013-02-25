@@ -35,7 +35,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
         if(request.readyState === 4 && request.status === 200) {
 
             //save ajax response
-            var response = eval(request.responseText);
+            var response = request.responseText;
 
             // check if callback is a function
             if(typeof callback === "function") {
@@ -55,7 +55,14 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
     console.log("anonymous function");
 
-    //var wurst = [["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]];
+    /*var wurst = '[["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]]';
+    console.log(wurst);
+    //wurst = wurst.replace(/\[\[/gi, '[');
+    //wurst = wurst.replace(/\]\]/gi, ']');
+    wurst = wurst.replace(/\],\[/gi, '#');
+    wurst = wurst.slice(2,-2);
+    console.log(wurst);
+    console.log(wurst.split("#"));*/
 
     // get the search form
     var searchForm = document.getElementById("search-form");
@@ -76,6 +83,10 @@ function ajaxCall(dataUrl, outputElement, callback) {
             var hstUrl  = serverUrl + "Abfahrten.do?ort=dresden&hst=" + hstName;
 
             ajaxCall(hstUrl, target, function(data) {
+
+                data = data.replace(/\],\[/gi, '#');
+                data = data.slice(2,-2);
+                data = data.split("#");
 
                 var i;
                 var y;
