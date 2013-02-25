@@ -55,6 +55,9 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
     console.log("anonymous function");
 
+    var wurst = [["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"],["13","Prohlis","754"]];
+    console.log(wurst.length);
+
     // get the search form
     var searchForm = document.getElementById("search-form");
 
@@ -75,9 +78,26 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
             ajaxCall(hstUrl, target, function(data) {
 
-                target.innerHTML = "";
+                var i;
+                var y;
+                var dataLength = data.length;
 
-                target.innerHTML = "<p>" + data + "</p>";
+                target.innerHTML =  "<table>";
+                target.innerHTML += "<tr>";
+                target.innerHTML += "<th>Linie</th>";
+                target.innerHTML += "<th>Richtung</th>";
+                target.innerHTML += "<th>Abfahrt</th>";
+                target.innerHTML += "</tr>";
+
+                for (i = 0; i < dataLength; i++) {
+                    target.innerHTML += "<tr>";
+                    for (y = 0; y < 3; y++) {
+                        target.innerHTML += "<td>" + data[i][y] + "</td>";
+                    }
+                    target.innerHTML += "</tr>";
+                }
+
+                target.innerHTML += "</table>";
             });
         }
     };
