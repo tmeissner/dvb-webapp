@@ -1,3 +1,7 @@
+// variable to en-/disable debug
+// set to 1 to enable debug log
+var DEBUG;
+
 // server url
 var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
 
@@ -5,10 +9,12 @@ var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
 // xmlhttp object function
 function getHTTPObject() {
 
-    console.log("xml http object function");
+    // debug log
+    if (DEBUG === 1) {console.log("xml http object function");}
 
     var xhr;
 
+    // check for availibility if xmlhttprequest object
     if(window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
     } else if(window.ActiveXObject) {
@@ -21,9 +27,10 @@ function getHTTPObject() {
 
 
 // ajax call function
-function ajaxCall(dataUrl, outputElement, callback) {
+function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
-    console.log("ajax function");
+    // debug log
+    if (DEBUG === 1) {console.log("ajax function");}
 
     // get the xmlhttp object which is supported
     var request = getHTTPObject();
@@ -35,7 +42,13 @@ function ajaxCall(dataUrl, outputElement, callback) {
         if(request.readyState === 4 && request.status === 200) {
 
             //save ajax response
-            var response = request.responseText;
+            if (responseType === "json") {
+                var response = JSON.parse(request.responseText);
+            } else if (responseType === "xml") {
+                var response = request.responseXML;
+            } else {
+                var response = request.responseText;
+            }
 
             // check if callback is a function
             if(typeof callback === "function") {
@@ -53,7 +66,8 @@ function ajaxCall(dataUrl, outputElement, callback) {
 // wrap all in anonymous function to get out of global scope
 (function() {
 
-    console.log("anonymous function");
+    // debug log
+    if (DEBUG === 1) {console.log("anonymous function");}
 
     // get the search form
     var searchForm = document.getElementById("search-form");
@@ -64,7 +78,8 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
         getInfo : function(event) {
 
-            console.log("getInfo function");
+            // debug log
+            if (DEBUG === 1) {console.log("getInfo function");}
 
             // prevent submit default behaviour
             event.preventDefault();
@@ -76,14 +91,16 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
             ajaxCall(hstUrl, target, function(data) {
 
-                console.log("received data: " + data);
+                // debug log
+                if (DEBUG === 1) {console.log("received data: " + data);}
 
                 data = data.replace(/\],\[/gi, '#');
                 data = data.replace(/\(.+?\)/gi, '');
                 data = data.replace('ß', 'ss');
                 data = data.slice(2,-2).split("#");
 
-                console.log("parsed data: " + data);
+                // debug log
+                if (DEBUG === 1) {console.log("parsed data: " + data);}
 
                 var i;
                 var y;
@@ -102,9 +119,11 @@ function ajaxCall(dataUrl, outputElement, callback) {
                 for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
                     var entry = data[i].split(",");
-                    console.log("part " + i + " of parsed data: " + entry);
+                    // debug log
+                    if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
                     for (y = 0; y < 3; y++) {
-                        console.log("part " + y + ": " + entry[y]);
+                        // debug log
+                        if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
                         htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
                     }
                     htmlOutput += "</tr>";
@@ -115,7 +134,7 @@ function ajaxCall(dataUrl, outputElement, callback) {
 
                 // print table into web page
                 target.innerHTML = htmlOutput;
-            });
+            }, "text");
         }
     };
 
