@@ -3,7 +3,8 @@
 var DEBUG;
 
 // server url
-var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
+//var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
+var serverUrl = "http://goodcleanfun.de/cgi-bin/";
 
 
 // xmlhttp object function
@@ -87,7 +88,8 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             // get output area
             var target  = document.getElementById("output");
             var hstName = document.getElementById("q").value;
-            var hstUrl  = serverUrl + "Abfahrten.do?ort=dresden&hst=" + hstName;
+            //var hstUrl  = serverUrl + "Abfahrten.do?ort=dresden&hst=" + hstName;
+            var hstUrl  = serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName;
 
             ajaxCall(hstUrl, target, function(data) {
 
@@ -97,7 +99,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
                 data = data.replace(/\],\[/gi, '#');
                 data = data.replace(/\(.+?\)/gi, '');
                 data = data.replace('ß', 'ss');
-                data = data.slice(2,-2).split("#");
+                data = data.slice(3,-3).split("#");
 
                 // debug log
                 if (DEBUG === 1) {console.log("parsed data: " + data);}
