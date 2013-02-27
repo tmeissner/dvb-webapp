@@ -89,7 +89,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             var target  = document.getElementById("output");
             var hstName = document.getElementById("q").value;
             //var hstUrl  = serverUrl + "Abfahrten.do?ort=dresden&hst=" + hstName;
-            var hstUrl  = serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName;
+            var hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
 
             ajaxCall(hstUrl, target, function(data) {
 
