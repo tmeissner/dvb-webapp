@@ -2,10 +2,6 @@
 // set to 1 to enable debug log
 var DEBUG;
 
-// server url
-//var serverUrl = "http://widgets.vvo-online.de/abfahrtsmonitor/";
-var serverUrl = "http://goodcleanfun.de/cgi-bin/";
-
 
 // xmlhttp object function
 function getHTTPObject() {
@@ -70,6 +66,14 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
 
+    // server url
+    var origin = window.location.origin.indexOf("www.goodcleanfun.de");
+    if (origin === -1) {
+        var serverUrl = "http://goodcleanfun.de/cgi-bin/";
+    } else {
+        var serverUrl = "http://www.goodcleanfun.de/cgi-bin/";
+    }
+
     // get the search form
     var searchForm = document.getElementById("search-form");
 
@@ -88,7 +92,6 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             // get output area
             var target  = document.getElementById("output");
             var hstName = document.getElementById("q").value;
-            //var hstUrl  = serverUrl + "Abfahrten.do?ort=dresden&hst=" + hstName;
             var hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
 
             ajaxCall(hstUrl, target, function(data) {
@@ -99,6 +102,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
                 data = data.replace(/\],\[/gi, '#');
                 data = data.replace(/\(.+?\)/gi, '');
                 data = data.replace('ß', 'ss');
+                data = data.replace(/<(.+?)>/gi, '$1');
                 data = data.slice(3,-3).split("#");
 
                 // debug log
