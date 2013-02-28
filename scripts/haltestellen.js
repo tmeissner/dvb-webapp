@@ -9,6 +9,7 @@ function getHTTPObject() {
     // debug log
     if (DEBUG === 1) {console.log("xml http object function");}
 
+    // variable definitions
     var xhr;
 
     // check for availibility if xmlhttprequest object
@@ -29,8 +30,9 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     // debug log
     if (DEBUG === 1) {console.log("ajax function");}
 
-    // get the xmlhttp object which is supported
-    var request = getHTTPObject();
+    // variable definitions
+    var response;
+    var request = getHTTPObject();  // get the xmlhttp object which is supported
 
     outputElement.innerHTML = "Lade Daten ...";
 
@@ -40,11 +42,11 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
             //save ajax response
             if (responseType === "json") {
-                var response = JSON.parse(request.responseText);
+                response = JSON.parse(request.responseText);
             } else if (responseType === "xml") {
-                var response = request.responseXML;
+                response = request.responseXML;
             } else {
-                var response = request.responseText;
+                response = request.responseText;
             }
 
             // check if callback is a function
@@ -63,15 +65,18 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 // wrap all in anonymous function to get out of global scope
 (function() {
 
+    //variable definitions
+    var serverUrl;
+    var origin = window.location.origin.indexOf("www.goodcleanfun.de");
+
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
 
     // server url
-    var origin = window.location.origin.indexOf("www.goodcleanfun.de");
     if (origin === -1) {
-        var serverUrl = "http://goodcleanfun.de/cgi-bin/";
+        serverUrl = "http://goodcleanfun.de/cgi-bin/";
     } else {
-        var serverUrl = "http://www.goodcleanfun.de/cgi-bin/";
+        serverUrl = "http://www.goodcleanfun.de/cgi-bin/";
     }
 
     // get the search form
@@ -94,51 +99,63 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             var hstName = document.getElementById("q").value;
             var hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
 
+            // get the data from the server with an ajax call
             ajaxCall(hstUrl, target, function(data) {
 
                 // debug log
                 if (DEBUG === 1) {console.log("received data: " + data);}
 
-                data = data.replace(/\],\[/gi, '#');
-                data = data.replace(/\(.+?\)/gi, '');
-                data = data.replace('ß', 'ss');
-                data = data.replace(/<(.+?)>/gi, '$1');
-                data = data.slice(3,-3).split("#");
-
-                // debug log
-                if (DEBUG === 1) {console.log("parsed data: " + data);}
-
+                //variable definitions
                 var i;
                 var y;
                 var htmlOutput;
-                var dataLength = data.length;
+                var entry;
+                var dataLength;
 
-                // generate table header
-                htmlOutput =  "<table>";
-                htmlOutput += "<tr>";
-                htmlOutput += "<th>Linie</th>";
-                htmlOutput += "<th>Richtung</th>";
-                htmlOutput += "<th>Abfahrt</th>";
-                htmlOutput += "</tr>";
+                // process of response only if it's not empty
+                if (data.indexOf("[]") === -1) {
 
-                // generate table entries
-                for (i = 0; i < dataLength; i++) {
-                    htmlOutput += "<tr>";
-                    var entry = data[i].split(",");
+                    // replace useless chars
+                    // split string into array
+                    data = data.replace(/\],\[/gi, '#');
+                    data = data.replace(/\(.+?\)/gi, '');
+                    data = data.replace('ß', 'ss');
+                    data = data.replace(/<(.+?)>/gi, '$1');
+                    data = data.slice(3,-3).split("#");
+
                     // debug log
-                    if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
-                    for (y = 0; y < 3; y++) {
-                        // debug log
-                        if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
-                        htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
-                    }
+                    if (DEBUG === 1) {console.log("parsed data: " + data);}
+
+                    dataLength = data.length;
+
+                    // generate table header
+                    htmlOutput =  "<table>";
+                    htmlOutput += "<tr>";
+                    htmlOutput += "<th>Linie</th>";
+                    htmlOutput += "<th>Richtung</th>";
+                    htmlOutput += "<th>Abfahrt</th>";
                     htmlOutput += "</tr>";
+
+                    // generate table entries
+                    for (i = 0; i < dataLength; i++) {
+                        htmlOutput += "<tr>";
+                        entry = data[i].split(",");
+                        // debug log
+                        if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
+                        for (y = 0; y < 3; y++) {
+                            // debug log
+                            if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
+                            htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
+                        }
+                        htmlOutput += "</tr>";
+                    }
+                    // close table
+                    htmlOutput += "</table>";
+                } else {  // there was an empty response
+                    htmlOutput =  "<p>Haltestelleneingabe nicht eindeutig</p>";
                 }
 
-                // close table
-                htmlOutput += "</table>";
-
-                // print table into web page
+                // print content into web page
                 target.innerHTML = htmlOutput;
             }, "text");
         }
