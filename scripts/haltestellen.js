@@ -67,6 +67,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
     //variable definitions
     var serverUrl;
+    var target = document.getElementById("output");
     var origin = window.location.origin.indexOf("www.goodcleanfun.de");
 
     // debug log
@@ -85,83 +86,85 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     // haltestelle object
     var haltestelle = {
 
-
-        getInfo : function(event) {
+        getAbfahrten : function(event) {
 
             // debug log
-            if (DEBUG === 1) {console.log("getInfo function");}
+            if (DEBUG === 1) {console.log("getAbfahrten() method");}
 
             // prevent submit default behaviour
             event.preventDefault();
 
-            // get output area
-            var target  = document.getElementById("output");
+            // construct ajax url
             var hstName = document.getElementById("q").value;
             var hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
 
             // get the data from the server with an ajax call
-            ajaxCall(hstUrl, target, function(data) {
+            ajaxCall(hstUrl, target, haltestelle.processAbfahrten, "text");
+
+        },
+
+        processAbfahrten : function (data) {
+
+            // debug log
+            if (DEBUG === 1) {console.log("processAbfahrten() method");}
+            if (DEBUG === 1) {console.log("received data: " + data);}
+
+            //variable definitions
+            var i;
+            var y;
+            var htmlOutput;
+            var entry;
+            var dataLength;
+
+            // process of response only if it's not empty
+            if (data.indexOf("[]") === -1) {
+
+                // replace useless chars & split string into array
+                data = data.replace(/\],\[/gi, '#');     // insert a special char to mark internal array boundaries
+                data = data.replace(/\(.+?\)/gi, '');    // remove all content in round parentheses
+                data = data.replace('ß', 'ss');          // remove some special characters
+                data = data.replace(/<(.+?)>/gi, '$1');  // remove tag parentheses to prevent code injection
+                data = data.slice(3,-3).split("#");      // split on the inserted char to get an array of arrays
 
                 // debug log
-                if (DEBUG === 1) {console.log("received data: " + data);}
+                if (DEBUG === 1) {console.log("parsed data: " + data);}
 
-                //variable definitions
-                var i;
-                var y;
-                var htmlOutput;
-                var entry;
-                var dataLength;
+                dataLength = data.length;
 
-                // process of response only if it's not empty
-                if (data.indexOf("[]") === -1) {
+                // generate table header
+                htmlOutput =  "<table>";
+                htmlOutput += "<tr>";
+                htmlOutput += "<th>Linie</th>";
+                htmlOutput += "<th>Richtung</th>";
+                htmlOutput += "<th>Abfahrt</th>";
+                htmlOutput += "</tr>";
 
-                    // replace useless chars
-                    // split string into array
-                    data = data.replace(/\],\[/gi, '#');
-                    data = data.replace(/\(.+?\)/gi, '');
-                    data = data.replace('ß', 'ss');
-                    data = data.replace(/<(.+?)>/gi, '$1');
-                    data = data.slice(3,-3).split("#");
-
-                    // debug log
-                    if (DEBUG === 1) {console.log("parsed data: " + data);}
-
-                    dataLength = data.length;
-
-                    // generate table header
-                    htmlOutput =  "<table>";
+                // generate table entries
+                for (i = 0; i < dataLength; i++) {
                     htmlOutput += "<tr>";
-                    htmlOutput += "<th>Linie</th>";
-                    htmlOutput += "<th>Richtung</th>";
-                    htmlOutput += "<th>Abfahrt</th>";
-                    htmlOutput += "</tr>";
-
-                    // generate table entries
-                    for (i = 0; i < dataLength; i++) {
-                        htmlOutput += "<tr>";
-                        entry = data[i].split(",");
+                    entry = data[i].split(",");
+                    // debug log
+                    if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
+                    for (y = 0; y < 3; y++) {
                         // debug log
-                        if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
-                        for (y = 0; y < 3; y++) {
-                            // debug log
-                            if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
-                            htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
-                        }
-                        htmlOutput += "</tr>";
+                        if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
+                        htmlOutput += "<td>" + entry[y].slice(1,-1) + "</td>";
                     }
-                    // close table
-                    htmlOutput += "</table>";
-                } else {  // there was an empty response
-                    htmlOutput =  "<p>Haltestelleneingabe nicht eindeutig</p>";
+                    htmlOutput += "</tr>";
                 }
+                // close table
+                htmlOutput += "</table>";
+            } else {  // there was an empty response
+                htmlOutput =  "<p>Haltestelleneingabe nicht eindeutig</p>";
+            }
 
-                // print content into web page
-                target.innerHTML = htmlOutput;
-            }, "text");
+            // print content into web page
+            target.innerHTML = htmlOutput;
         }
+
     };
 
     //event listeners
-    searchForm.addEventListener("submit", haltestelle.getInfo, false);
+    searchForm.addEventListener("submit", haltestelle.getAbfahrten, false);
 
 })();  // end of anonymous function
