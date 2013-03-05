@@ -65,19 +65,23 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 // wrap all in anonymous function to get out of global scope
 (function() {
 
+
     //variable definitions
     var serverUrl;
     var target = document.getElementById("output");
-    var origin = window.location.origin.indexOf("www.goodcleanfun.de");
 
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
 
-    // server url
-    if (origin === -1) {
-        serverUrl = "http://goodcleanfun.de/cgi-bin/";
+    // parse actual url and parse for protocol type (http/https)
+    // set the ajax server url dependent on the protocol
+    // for strato ssl-proxy, we have to insert the 1st part of the url path
+    serverUrl = window.location.protocol + "//" +  window.location.hostname;
+    if (serverUrl.indexOf("https") === -1) {
+        serverUrl += "/cgi-bin/";
     } else {
-        serverUrl = "http://www.goodcleanfun.de/cgi-bin/";
+        var path = "/" + window.location.pathname.split("/")[1];
+        serverUrl += path + "/cgi-bin/";
     }
 
     // get the search form
