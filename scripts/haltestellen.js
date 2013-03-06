@@ -31,8 +31,8 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     if (DEBUG === 1) {console.log("ajax function");}
 
     // variable definitions
-    var response;
-    var request = getHTTPObject();  // get the xmlhttp object which is supported
+    var response,
+        request = getHTTPObject();  // get the xmlhttp object which is supported
 
     outputElement.innerHTML = "Lade Daten ...";
 
@@ -67,8 +67,10 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
 
     //variable definitions
-    var serverUrl;
-    var target = document.getElementById("output");
+    var serverUrl,                                              // this will hold the url we call with the ajaxCall() function
+        target = document.getElementById("output"),             // get the html area where we print out the data
+        searchForm = document.getElementById("search-form"),    // get the search form
+        haltestelle;                                            // object with methods to get and process the data
 
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
@@ -80,15 +82,11 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     if (serverUrl.indexOf("https") === -1) {
         serverUrl += "/cgi-bin/";
     } else {
-        var path = "/" + window.location.pathname.split("/")[1];
-        serverUrl += path + "/cgi-bin/";
+        serverUrl += "/" + window.location.pathname.split("/")[1] + "/cgi-bin/";
     }
 
-    // get the search form
-    var searchForm = document.getElementById("search-form");
-
     // haltestelle object
-    var haltestelle = {
+    haltestelle = {
 
         getAbfahrten : function(event) {
 
@@ -99,8 +97,8 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             event.preventDefault();
 
             // construct ajax url
-            var hstName = document.getElementById("q").value;
-            var hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
+            var hstName = document.getElementById("q").value,
+                hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
 
             // get the data from the server with an ajax call
             ajaxCall(hstUrl, target, haltestelle.processAbfahrten, "text");
@@ -114,11 +112,11 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
             if (DEBUG === 1) {console.log("received data: " + data);}
 
             //variable definitions
-            var i;
-            var y;
-            var htmlOutput;
-            var entry;
-            var dataLength;
+            var i,
+                y,
+                htmlOutput,
+                entry,
+                dataLength;
 
             // process of response only if it's not empty
             if (data.indexOf("[]") === -1) {
@@ -171,4 +169,4 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     //event listeners
     searchForm.addEventListener("submit", haltestelle.getAbfahrten, false);
 
-})();  // end of anonymous function
+}());  // end of anonymous function
