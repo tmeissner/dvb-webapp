@@ -27,7 +27,8 @@ validqueries = ["haltestelle.do", "abfahrten.do"]
 if (form.getvalue('query')):
     query = form.getvalue('query')
 
-for key in queries.viewkeys():
+for key in queries:
+#.viewkeys():
     if (form.getvalue(key)):
         queries[key] = form.getvalue(key)
 
