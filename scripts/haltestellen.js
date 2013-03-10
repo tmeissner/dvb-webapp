@@ -1,6 +1,6 @@
 // variable to en-/disable debug
 // set to 1 to enable debug log
-var DEBUG;
+var DEBUG = 1;
 
 
 // xmlhttp object function
@@ -88,7 +88,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     // haltestelle object
     haltestelle = {
 
-        getAbfahrten : function(event) {
+        getAbfahrten : function (event) {
 
             // debug log
             if (DEBUG === 1) {console.log("getAbfahrten() method");}
@@ -98,7 +98,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
             // construct ajax url
             var hstName = document.getElementById("q").value,
-                hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?ort=dresden&hst=" + hstName);
+                hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?query=abfahrten.do&ort=dresden&hst=" + hstName);
 
             // get the data from the server with an ajax call
             ajaxCall(hstUrl, target, haltestelle.processAbfahrten, "text");
@@ -162,11 +162,37 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
             // print content into web page
             target.innerHTML = htmlOutput;
+        },
+
+        getHaltestellen : function (event) {
+
+            // debug log
+            if (DEBUG === 1) {console.log("getHaltestellen() method");}
+
+            // prevent submit default behaviour
+            event.preventDefault();
+
+            // construct ajax url
+            var hstName = document.getElementById("q").value,
+                hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?query=haltestelle.do&ort=dresden&hst=" + hstName);
+
+            // get the data from the server with an ajax call
+            ajaxCall(hstUrl, target, haltestelle.processHaltestellen, "text");
+
+        },
+
+        processHaltestellen : function (data) {
+
+            // debug log
+            if (DEBUG === 1) {console.log("processHaltestellen() method");}
+            if (DEBUG === 1) {console.log("received data: " + data);}
+
         }
 
     };
 
     //event listeners
     searchForm.addEventListener("submit", haltestelle.getAbfahrten, false);
+    searchForm.addEventListener("submit", haltestelle.getHaltestellen, false);
 
 }());  // end of anonymous function
