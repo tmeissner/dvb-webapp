@@ -79,6 +79,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
     // set the ajax server url dependent on the protocol
     // for strato ssl-proxy, we have to insert the 1st part of the url path
     serverUrl = window.location.protocol + "//" +  window.location.hostname;
+
     if (serverUrl.indexOf("https") === -1) {
         serverUrl += "/cgi-bin/";
     } else {
@@ -146,17 +147,25 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
                 // generate table entries
                 for (i = 0; i < dataLength; i++) {
+
                     htmlOutput += "<tr>";
                     entry = data[i].split(",");
+
                     // debug log
                     if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
+
                     for (y = 0; y < 3; y++) {
+
                         // debug log
                         if (DEBUG === 1) {console.log("part " + y + ": " + entry[y]);}
                         htmlOutput += "<td>" + entry[y].slice(1, -1) + "</td>";
+
                     }
+
                     htmlOutput += "</tr>";
+
                 }
+
                 // close table
                 htmlOutput += "</table>";
                 // print content into web page
@@ -197,7 +206,9 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
             // process of response only if it's not empty
             if (data.indexOf("[]") !== -1) {
+
                 htmlOutput = "<p>unbekannte Haltstelle, bitte erneut versuchen</p>";
+
             } else {
 
                 // replace useless chars & split string into array
@@ -217,6 +228,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
                 // generate table entries
                 for (i = 0; i < dataLength; i++) {
+
                     htmlOutput += "<tr>";
                     entry = data[i].split(",");
                     // debug log
@@ -224,7 +236,9 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
                     htmlOutput += "<td>" + entry[0].slice(1, -1) + "</td>";
                     htmlOutput += "</tr>";
+
                 }
+
                 // close table
                 htmlOutput += "</table>";
 
@@ -232,6 +246,7 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
             // print content into web page
             target.innerHTML = htmlOutput;
+
         }
 
     };
