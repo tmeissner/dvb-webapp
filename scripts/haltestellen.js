@@ -70,9 +70,8 @@ var DEBUG;
 
                 // replace useless chars & split string into array
                 data = data.replace(/\(.+?\)/gi, '');    // remove all content in round parentheses
-                data = data.replace('ß', 'ss');          // remove some special characters
                 data = data.replace(/<(.+?)>/gi, '$1');  // remove tag parentheses to prevent code injection
-                data = data.slice(3, -3).split("],[");      // split at array boundaries to get an array of arrays
+                data = data.slice(3, -3).split("],[");   // split at array boundaries to get an array of arrays
 
                 // debug log
                 if (DEBUG === 1) {console.log("parsed data: " + data);}
@@ -155,10 +154,9 @@ var DEBUG;
 
                 // replace useless chars & split string into array
                 data = data.replace(/\[\[\[.+?\]\],/gi, '[');   // remove useless first city entry
-                data = data.replace(/\(.+?\)/gi, '');       // remove all content in round parentheses
-                data = data.replace('ß', 'ss');             // remove some special characters
-                data = data.replace(/<(.+?)>/gi, '$1');     // remove tag parentheses to prevent code injection
-                data = data.slice(4, -4).split("],[");      // split at array boundaries to get an array of arrays
+                data = data.replace(/\(.+?\)/gi, '');           // remove all content in round parentheses
+                data = data.replace(/<(.+?)>/gi, '$1');         // remove tag parentheses to prevent code injection
+                data = data.slice(4, -4).split("],[");          // split at array boundaries to get an array of arrays
 
                 // debug log
                 if (DEBUG === 1) {console.log("parsed data: " + data);}
