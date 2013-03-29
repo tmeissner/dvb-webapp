@@ -6,7 +6,28 @@
  * To change this template use File | Settings | File Templates.
  */
 
-gcf = {
+
+var gcf = {
+
+
+    // decode special characters with their utf-8 representation
+    decodeHtml : function (token) {
+
+        var i,
+            y,
+            start = [33, 58, 91, 123, 161],
+            stop = [47, 64, 96, 126, 255],
+            startLength = start.length;
+
+        for (y = 0; y < startLength; y++) {
+            for (i = start[y]; i <= stop[y]; i++) {
+                token = token.replace("&#" + i +";", String.fromCharCode(255));
+            }
+        }
+
+        return token;
+    },
+
 
     // xmlhttp object function
     getHTTPObject : function () {
@@ -65,5 +86,6 @@ gcf = {
         request.send(null);
 
     }
+
 
 }
