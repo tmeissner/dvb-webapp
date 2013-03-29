@@ -29,6 +29,26 @@ var gcf = {
     },
 
 
+    // get the path of the cgi-bin dir with correct http(s) protocol
+    // for using with ajax calls (to with same origin policy)
+    getCgiBinPath : function () {
+
+        // parse actual url and parse for protocol type (http/https)
+        // set the ajax server url dependent on the protocol
+        // for strato ssl-proxy, we have to insert the 1st part of the url path
+        var serverUrl = window.location.protocol + "//" +  window.location.hostname;
+
+        if (serverUrl.indexOf("https") === -1) {
+            serverUrl += "/cgi-bin/";
+        } else {
+            serverUrl += "/" + window.location.pathname.split("/")[1] + "/cgi-bin/";
+        }
+
+        return serverUrl;
+
+    },
+
+
     // xmlhttp object function
     getHTTPObject : function () {
 
@@ -88,4 +108,4 @@ var gcf = {
     }
 
 
-}
+};

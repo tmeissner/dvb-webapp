@@ -9,7 +9,7 @@ var DEBUG;
 
 
     //variable definitions
-    var serverUrl,                                              // this will hold the url we call with the ajaxCall() function
+    var serverUrl = gcf.getCgiBinPath(),                        // the url of the cgi-bin folder with the scripts we call with the ajaxCall() function
         target = document.getElementById("output"),             // get the html area where we print out the data
         searchForm = document.getElementById("search-form"),    // get the search form
         haltestelle;                                            // object with methods to get and process the data
@@ -17,16 +17,6 @@ var DEBUG;
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
 
-    // parse actual url and parse for protocol type (http/https)
-    // set the ajax server url dependent on the protocol
-    // for strato ssl-proxy, we have to insert the 1st part of the url path
-    serverUrl = window.location.protocol + "//" +  window.location.hostname;
-
-    if (serverUrl.indexOf("https") === -1) {
-        serverUrl += "/cgi-bin/";
-    } else {
-        serverUrl += "/" + window.location.pathname.split("/")[1] + "/cgi-bin/";
-    }
 
     // haltestelle object
     haltestelle = {
@@ -64,7 +54,7 @@ var DEBUG;
             // process of response only if it's not empty
             if (data.indexOf("[]") !== -1) {  // there was an empty response
 
-                haltestelle.getHaltestellen();
+                this.getHaltestellen();
 
             } else {
 
