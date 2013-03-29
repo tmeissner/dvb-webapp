@@ -61,24 +61,6 @@ function ajaxCall(dataUrl, outputElement, callback, responseType) {
 
 }
 
-// decode special characters with their utf-8 representation
-function decodeHtml(token) {
-
-    var i,
-        y,
-        start = [33, 58, 91, 123, 161],
-        stop = [47, 64, 96, 126, 255],
-        startLength = start.length;
-
-    for (y = 0; y < startLength; y++) {
-        for (i = start[y]; i <= stop[y]; i++) {
-            token = token.replace("&#" + i +";", String.fromCharCode(255));
-        }
-    }
-
-    return token;
-}
-
 
 // wrap all in anonymous function to get out of global scope
 (function() {
@@ -146,8 +128,9 @@ function decodeHtml(token) {
 
                 // replace useless chars & split string into array
                 data = data.replace(/\(.+?\)/gi, '');    // remove all content in round parentheses
+                data = data.replace('ß', 'ss');          // remove some special characters
                 data = data.replace(/<(.+?)>/gi, '$1');  // remove tag parentheses to prevent code injection
-                data = data.slice(3, -3).split("],[");   // split at array boundaries to get an array of arrays
+                data = data.slice(3, -3).split("],[");      // split at array boundaries to get an array of arrays
 
                 // debug log
                 if (DEBUG === 1) {console.log("parsed data: " + data);}
@@ -231,6 +214,7 @@ function decodeHtml(token) {
                 // replace useless chars & split string into array
                 data = data.replace(/\[\[\[.+?\]\],/gi, '[');   // remove useless first city entry
                 data = data.replace(/\(.+?\)/gi, '');       // remove all content in round parentheses
+                data = data.replace('ß', 'ss');             // remove some special characters
                 data = data.replace(/<(.+?)>/gi, '$1');     // remove tag parentheses to prevent code injection
                 data = data.slice(4, -4).split("],[");      // split at array boundaries to get an array of arrays
 
