@@ -1,6 +1,8 @@
 // variable to en-/disable debug
 // set to 1 to enable debug log
-var DEBUG;
+if (DEBUG === undefined) {
+    var DEBUG = 1;
+}
 
 
 
@@ -10,13 +12,14 @@ var DEBUG;
 
     //variable definitions
     var serverUrl = gcf.getCgiBinPath(),                        // the url of the cgi-bin folder with the scripts we call with the ajaxCall() function
+        input = document.getElementById("input"),
         target = document.getElementById("output"),             // get the html area where we print out the data
         searchForm = document.getElementById("search-form"),    // get the search form
+        lastHst,
         haltestelle;                                            // object with methods to get and process the data
 
     // debug log
     if (DEBUG === 1) {console.log("anonymous function");}
-
 
     // haltestelle object
     haltestelle = {
@@ -33,8 +36,10 @@ var DEBUG;
             var hstName = document.getElementById("q").value,
                 hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?query=abfahrten.do&ort=dresden&hst=" + hstName);
 
+            lastHst = hstName;
+
             // get the data from the server with an ajax call
-            gcf.ajaxCall(hstUrl, target, this.processAbfahrten, "text");
+            gcf.ajaxCall(hstUrl, target, haltestelle.processAbfahrten, "text");
 
         },
 
@@ -48,13 +53,14 @@ var DEBUG;
             var i,
                 y,
                 htmlOutput,
+                htmlInput,
                 entry,
                 dataLength;
 
             // process of response only if it's not empty
             if (data.indexOf("[]") !== -1) {  // there was an empty response
 
-                this.getHaltestellen();
+                haltestelle.getHaltestellen();
 
             } else {
 
@@ -67,6 +73,9 @@ var DEBUG;
                 if (DEBUG === 1) {console.log("parsed data: " + data);}
 
                 dataLength = data.length;
+
+                htmlInput  = "<label for='q'>Haltestelle</label>";
+                htmlInput += "<input type='search' id='q' name='q' required placeholder='Haltestelle eingeben' value='" + lastHst + "'>";
 
                 // generate table header
                 htmlOutput = "<table>";
@@ -99,8 +108,10 @@ var DEBUG;
 
                 // close table
                 htmlOutput += "</table>";
+
                 // print content into web page
                 target.innerHTML = htmlOutput;
+                input.innerHTML  = htmlInput;
 
             }
 
@@ -111,15 +122,12 @@ var DEBUG;
             // debug log
             if (DEBUG === 1) {console.log("getHaltestellen() method");}
 
-            // prevent submit default behaviour
-            //event.preventDefault();
-
             // construct ajax url
             var hstName = document.getElementById("q").value,
                 hstUrl  = encodeURI(serverUrl + "abfahrtsmonitor.py?query=haltestelle.do&ort=dresden&hst=" + hstName);
 
             // get the data from the server with an ajax call
-            gcf.ajaxCall(hstUrl, target, this.processHaltestellen, "text");
+            gcf.ajaxCall(hstUrl, target, haltestelle.processHaltestellen, "text");
 
         },
 
@@ -133,12 +141,15 @@ var DEBUG;
             var i,
                 entry,
                 dataLength,
+                htmlInput,
                 htmlOutput;
 
             // process of response only if it's not empty
             if (data.indexOf("[]") !== -1) {
 
                 htmlOutput = "<p>unbekannte Haltstelle, bitte erneut versuchen</p>";
+
+                target.innerHTML = htmlOutput;
 
             } else {
 
@@ -154,28 +165,26 @@ var DEBUG;
                 dataLength = data.length;
 
                 // generate table header
-                htmlOutput = "<table>";
+                htmlInput  =  "<label for='q'>Haltestelle</label>";
+                htmlInput += "<select id='q' name='q' required>";
 
                 // generate table entries
                 for (i = 0; i < dataLength; i++) {
 
-                    htmlOutput += "<tr>";
                     entry = data[i].split(",");
                     // debug log
                     if (DEBUG === 1) {console.log("part " + i + " of parsed data: " + entry);}
 
-                    htmlOutput += "<td>" + entry[0].slice(1, -1) + "</td>";
-                    htmlOutput += "</tr>";
+                    htmlInput += "<option value='" + (entry[0].slice(1, -1)) + "'>" + (entry[0].slice(1, -1)) + "</option>";
 
                 }
 
                 // close table
-                htmlOutput += "</table>";
+                htmlInput += "</select>";
+
+                input.innerHTML = htmlInput;
 
             }
-
-            // print content into web page
-            target.innerHTML = htmlOutput;
 
         }
 
@@ -183,6 +192,5 @@ var DEBUG;
 
     //event listeners
     searchForm.addEventListener("submit", haltestelle.getAbfahrten, false);
-    //searchForm.addEventListener("submit", haltestelle.getHaltestellen, false);
 
 }());  // end of anonymous function
