@@ -1,10 +1,9 @@
-/**
- * Created with JetBrains WebStorm.
- * User: torsten
- * Date: 28.03.13
- * Time: 23:07
- * To change this template use File | Settings | File Templates.
- */
+// variable to en-/disable debug
+// set to 1 to enable debug log
+if (DEBUG === undefined) {
+    var DEBUG;
+}
+
 
 
 var gcf = {
@@ -98,6 +97,8 @@ var gcf = {
                 // check if callback is a function
                 if(typeof callback === "function") {
                     callback(response);
+                } else {
+                    if (DEBUG === 1) {console.log(callback + " is no callback function");}
                 }
             }
         };
